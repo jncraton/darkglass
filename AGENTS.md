@@ -9,28 +9,15 @@ The Python package lives under `darkglass/` with the main logic in
 `darkglass/main.py`. Static assets (`widget.js` and `admin.html`) are served
 from the `static/` directory and the simple landing page is `index.html`.
 
-Configuration
+The project is pre-alpha. Backwards compatibility may be freely violated.
 
-The package accepts an optional `darkglass.toml` file in the working
-directory. it must include two sections:
+## Config
 
-```toml
-[gemini]
-api_key = "..."
-model = "gemini-3.1-flash-lite-preview"  # optional, same default
+darkglass.toml contains proprietary config information. It should never be read or modified.
 
-[context]
-prompt = "..."
-```
+## Database
 
-`api_key` is used for the model call; `prompt` is the system prompt.
-
-All other values are hard‑coded sensible defaults; there is no
-longer any support for configuration via environment variables. Administrative
-email restrictions, cookie secrets, OAuth client IDs and URLs may be
-adjusted by editing the source, but typical deployments simply run with
-no admin or OAuth features enabled and the built‑in defaults. Database
-storage is always `data.db` in the working directory.
+Storage is always `data.db` in the working directory.
 
 ## Testing
 
