@@ -14,21 +14,16 @@ Configuration
 The package now supports an optional `darkglass.toml` file in the
 working directory. When present the two supported keys are
 
-- `gemini_api_key` – API key used by the model (overrides the
-  `GEMINI_API_KEY` environment variable)
-- `prompt` – system prompt describing institutional knowledge (falls
-  back to the `SYSTEM_PROMPT` environment variable or a built-in default)
+- `gemini_api_key` – API key used by the model
+- `prompt` – system prompt describing institutional knowledge (defaults to
+  an embedded string if not provided)
 
-Key environment variables
-
-- `GEMINI_API_KEY` – required to make model requests (returns a placeholder
-  string if unset).
-- `GEMINI_API_URL` – override the default Gemini endpoint for testing.
-- `DB_PATH` – path to the SQLite database file (defaults to `data.db`).
-- `ADMIN_EMAILS` – comma‑separated list of permitted admin addresses.
-- `COOKIE_SECRET` – secret used to sign session cookies.
-- `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `OAUTH_REDIRECT` – for Google
-  OAuth to access `/admin` and `/logs`.
+All other values are hard‑coded sensible defaults; there is no
+longer any support for configuration via environment variables. Administrative
+email restrictions, cookie secrets, OAuth client IDs and URLs may be
+adjusted by editing the source, but typical deployments simply run with
+no admin or OAuth features enabled and the built‑in defaults. Database
+storage is always `data.db` in the working directory.
 
 ## Testing
 

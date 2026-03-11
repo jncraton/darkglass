@@ -16,17 +16,16 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-DB_PATH = os.environ.get("DB_PATH", "data.db")
+DB_PATH = "data.db"
 sessions = {}
-ADMIN_EMAILS = (
-    os.environ.get("ADMIN_EMAILS", "").split(",")
-    if os.environ.get("ADMIN_EMAILS")
-    else []
-)
+ADMIN_EMAILS: list[str] = []
 COOKIE_NAME = "admin_session"
-COOKIE_SECRET = os.environ.get("COOKIE_SECRET", "secret")
-GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
-GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET")
+COOKIE_SECRET = "secret"
+GOOGLE_CLIENT_ID: Optional[str] = None
+GOOGLE_CLIENT_SECRET: Optional[str] = None
+
+# google oauth redirect fixed default
+OAUTH_REDIRECT = "http://localhost:8000/auth/callback"
 
 
 def load_config() -> dict:
@@ -46,11 +45,10 @@ def load_config() -> dict:
 
 _CONFIG = load_config()
 
-GEMINI_API_KEY = _CONFIG.get("gemini_api_key") or os.environ.get("GEMINI_API_KEY")
+GEMINI_API_KEY = _CONFIG.get("gemini_api_key")
 
 SYSTEM_PROMPT = (
     _CONFIG.get("prompt")
-    or os.environ.get("SYSTEM_PROMPT")
     or "Answer prospective student questions using the knowledge you have."
 )
 
@@ -156,9 +154,7 @@ def login_redirect():
         "client_id": GOOGLE_CLIENT_ID,
         "response_type": "code",
         "scope": "openid email",
-        "redirect_uri": os.environ.get(
-            "OAUTH_REDIRECT", "http://localhost:8000/auth/callback"
-        ),
+        "redirect_uri": OAUTH_REDIRECT,
         "access_type": "offline",
         "prompt": "consent",
     }
@@ -175,9 +171,7 @@ def auth_callback(code: Optional[str] = None, response: Response = None):
             "code": code,
             "client_id": GOOGLE_CLIENT_ID,
             "client_secret": GOOGLE_CLIENT_SECRET,
-            "redirect_uri": os.environ.get(
-                "OAUTH_REDIRECT", "http://localhost:8000/auth/callback"
-            ),
+            "redirect_uri": OAUTH_REDIRECT,
             "grant_type": "authorization_code",
         }
     ).encode()
@@ -212,10 +206,7 @@ def call_model(message: str) -> str:
     key = GEMINI_API_KEY
     if not key:
         return "[no API key configured]"
-    url = os.environ.get(
-        "GEMINI_API_URL",
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent",
-    )
+    url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent"
     headers = {"Content-Type": "application/json", "x-goog-api-key": key}
     prompt_text = f"{SYSTEM_PROMPT}\n\n{message}" if SYSTEM_PROMPT else message
     data = {"contents": [{"parts": [{"text": prompt_text}]}]}
