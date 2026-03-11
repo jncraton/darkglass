@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "darkglass"
-version = "0.2.0"
-description = "Embeddable chatbot for small Christian institutions (Darkglass)"
+version = "0.3.0"
+description = "Structured AI system with emebeddable chatbot"
 readme = "readme.md"
 authors = [
     { name = "Jon Craton", email = "jncraton@gmail.com" }
