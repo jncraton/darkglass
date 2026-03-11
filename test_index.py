@@ -40,6 +40,10 @@ def test_widget_present_and_toggle(root):
     header.click()
     expect(body).to_be_visible()
 
-    # clicking again should collapse
     header.click()
     expect(body).not_to_be_visible()
+    
+    header.click()  # open again
+    expect(body).to_be_visible()
+    body.click()
+    expect(body).to_be_visible()

@@ -76,13 +76,28 @@
   const body = container.querySelector('.messages')
   const input = container.querySelector('input')
 
-  header.addEventListener('click', () => {
+  header.addEventListener('click', (e) => {
+    e.stopPropagation()
     container.classList.toggle('closed')
     if (!container.classList.contains('closed')) {
       input.focus()
     }
   })
 
+  // prevent clicks inside the input from bubbling; we only want an outside
+  // click to collapse the widget
+  input.addEventListener('click', (e) => {
+    e.stopPropagation()
+  })
+
+  // clicking anywhere else should collapse if open
+  document.addEventListener('click', (e) => {
+    if (!container.classList.contains('closed')) {
+      if (!container.contains(e.target)) {
+        container.classList.add('closed')
+      }
+    }
+  })
   input.addEventListener('keydown', async (e) => {
     if (e.key === 'Enter') {
       const text = input.value.trim()
