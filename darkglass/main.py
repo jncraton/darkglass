@@ -33,8 +33,62 @@ COOKIE_SECRET = os.environ.get("COOKIE_SECRET", "secret")
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET")
 
-# embedded system prompt that contains institutional information
-SYSTEM_PROMPT = "Answer prospective student questions using the knowledge you have."
+# load optional configuration from darkglass.toml.  the file is intended to
+# live in the same directory as the application and allows an operator to
+# specify default values that would otherwise come from the environment.
+#
+# the two supported keys at the moment are:
+#
+#   gemini_api_key – the API key used when calling the model.  this value
+#   overrides the GEMINI_API_KEY environment variable if both are present.
+#
+#   prompt – a system prompt describing institutional knowledge.  when set
+#    it replaces the hard‑coded SYSTEM_PROMPT below.
+#
+# the TOML file is optional; if it does not exist we fall back to environment
+# variables and finally to hard‑coded defaults.  loading happens once at import
+# time so tests may need to reload the module after creating a temporary
+# config file.
+
+
+def load_config() -> dict:
+    """Parse ``darkglass.toml`` if it exists and return the resulting dict.
+
+    Uses the standard ``tomllib`` library (Python 3.11+) and falls back to
+    ``toml`` if not available.  If the file cannot be found or fails to parse
+    an empty dict is returned.
+    """
+
+    path = "darkglass.toml"
+    if not os.path.exists(path):
+        return {}
+    try:
+        import tomllib
+    except ImportError:  # pragma: no cover - python<3.11
+        try:
+            import toml as tomllib  # type: ignore
+        except ImportError:
+            # if toml isn't installed we behave as if the file were missing
+            return {}
+    try:
+        with open(path, "rb") as f:
+            return tomllib.load(f)
+    except Exception:
+        return {}
+
+
+# parse configuration once
+_CONFIG = load_config()
+
+# the gemini key will be used by ``call_model``; config beats env var
+GEMINI_API_KEY = _CONFIG.get("gemini_api_key") or os.environ.get("GEMINI_API_KEY")
+
+# system prompt may come from config, fallback to environment or hard‑coded
+SYSTEM_PROMPT = (
+    _CONFIG.get("prompt")
+    or os.environ.get("SYSTEM_PROMPT")
+    or "Answer prospective student questions using the knowledge you have."
+)
 
 
 def get_db():
@@ -200,7 +254,7 @@ def auth_callback(code: Optional[str] = None, response: Response = None):
 
 def call_model(message: str) -> str:
     # use the Gemini generative language API directly
-    key = os.environ.get("GEMINI_API_KEY")
+    key = GEMINI_API_KEY
     if not key:
         return "[no API key configured]"
     # allow overriding the endpoint for testing or future models
