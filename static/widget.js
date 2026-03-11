@@ -121,11 +121,14 @@
         const j = await r.json()
         const q = document.createElement('div')
         if (window.marked) {
-          q.innerHTML = 'Agent: ' + marked.parse(j.answer)
+          q.innerHTML = marked.parse(j.answer)
         } else {
-          q.textContent = 'Agent: ' + j.answer
+          q.textContent = j.answer
         }
+        const hr = document.createElement('hr')
+        body.appendChild(hr)
         body.appendChild(q)
+
         body.scrollTop = body.scrollHeight
       } catch (err) {
         console.error(err)
