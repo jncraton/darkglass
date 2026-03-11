@@ -202,32 +202,40 @@ def auth_callback(code: Optional[str] = None, response: Response = None):
 
 
 def call_model(message: str) -> str:
-    # use OpenAI or Anthropic depending on environment
-    key = os.environ.get("OPENAI_API_KEY")
+    # use the Gemini generative language API directly
+    key = os.environ.get("GEMINI_API_KEY")
     if not key:
         return "[no API key configured]"
-    # default to OpenAI chat completions
-    url = os.environ.get("MODEL_API_URL", "https://api.openai.com/v1/chat/completions")
-    headers = {"Content-Type": "application/json", "Authorization": f"Bearer {key}"}
-    # build request payload
-    data = {
-        "model": os.environ.get("OPENAI_MODEL", "gpt-4o-mini"),
-        "messages": [
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": message},
-        ],
-        "max_tokens": 500,
-    }
+    # allow overriding the endpoint for testing or future models
+    url = os.environ.get(
+        "GEMINI_API_URL",
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent",
+    )
+    headers = {"Content-Type": "application/json", "x-goog-api-key": key}
+    # build request payload in the shape expected by the REST call
+    # include the embedded system prompt before user text to preserve
+    # institutional information in every request
+    prompt_text = f"{SYSTEM_PROMPT}\n\n{message}" if SYSTEM_PROMPT else message
+    data = {"contents": [{"parts": [{"text": prompt_text}]}]}
     req = urllib.request.Request(url, data=json.dumps(data).encode(), headers=headers)
     try:
         resp = urllib.request.urlopen(req, timeout=30)
         j = json.load(resp)
-        # openai style choice
-        if "choices" in j and j["choices"]:
-            return j["choices"][0]["message"]["content"].strip()
-        # anthro style maybe
-        if "output" in j and isinstance(j["output"], str):
-            return j["output"].strip()
+        # Gemini responses typically carry a `candidates` array
+        if "candidates" in j and j["candidates"]:
+            first = j["candidates"][0]
+            if isinstance(first, dict) and "content" in first:
+                return str(first["content"]).strip()
+        # fall back to other common shapes
+        if "output" in j:
+            out = j["output"]
+            if isinstance(out, str):
+                return out.strip()
+            if isinstance(out, list) and out:
+                try:
+                    return str(out[0].get("content", "")).strip()
+                except Exception:
+                    pass
     except Exception as e:
         return f"[error calling model: {e}]"
     return ""
