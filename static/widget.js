@@ -8,75 +8,60 @@
   behave responsively without any framework.
   */
 
-  var style = document.createElement('style')
-  style.textContent = {
-    '#darkglass': {
-      position: 'fixed',
-      bottom: '20px',
-      right: '20px',
-      width: '300px',
-      maxWidth: '80vw',
-      maxHeight: '60vh',
-      fontFamily: 'sans-serif',
-      fontSize: '14px',
-      boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
-      border: '1px solid #ccc',
-      borderRadius: '8px',
-      overflow: 'hidden',
-      zIndex: '9999',
-      transition: 'max-height 0.3s ease,width 0.3s ease',
-      /* height will be limited by max-height; closed/open controlled by class */
-    },
-    '#darkglass.closed': {
-      maxHeight: '40px',
-      width: '200px',
-    },
-    '#darkglass:not(.closed)': {
-      maxHeight: '60vh',
-    },
-    '#darkglass .header': {
-      background: '#007bff',
-      color: '#fff',
-      padding: '8px 10px',
-      cursor: 'pointer',
-      userSelect: 'none',
-    },
-    '#darkglass .body': {
-      display: 'flex',
-      flexDirection: 'column',
-      height: '300px',
-    },
-    '#darkglass .messages': {
-      flex: '1',
-      padding: '10px',
-      overflow: 'auto',
-      background: '#fafafa',
-    },
-    '#darkglass .input-container': {
-      borderTop: '1px solid #ddd',
-      padding: '5px',
-    },
-    '#darkglass .input-container input': {
-      width: '100%',
-      boxSizing: 'border-box',
-      padding: '6px',
-      border: '1px solid #ccc',
-      borderRadius: '4px',
-    },
+const styles = `
+  #darkglass {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    max-width: 80vw;
+    max-height: 60vh;
+    font-family: sans-serif;
+    font-size: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 9999;
+    transition: max-height 0.3s ease, width 0.3s ease
   }
-  // convert style object to string
-  style.textContent = Object.entries(style.textContent)
-    .map(function (pair) {
-      var selector = pair[0]
-      var rules = pair[1]
-      var body = Object.entries(rules)
-        .map(function (r) {
-          return r[0] + ':' + r[1] + ';'
-        })
-        .join('')
-      return selector + '{' + body + '}'
-    })
-    .join('')
+  #darkglass.closed {
+    max-height: 40px;
+    width: 200px
+  }
+  #darkglass .header {
+    background: #007bff;
+    color: #fff;
+    padding: 8px 10px;
+    cursor: pointer;
+    user-select: none
+  }
+  #darkglass .body {
+    display: flex;
+    flex-direction: column;
+    height: 300px
+  }
+  #darkglass .messages {
+    flex: 1;
+    padding: 10px;
+    overflow: auto;
+    background: #fafafa
+  }
+  #darkglass .input-container {
+    border-top: 1px solid #ddd;
+    padding: 5px
+  }
+  #darkglass .input-container input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px
+  }
+  `
+  
+  const style = document.createElement('style')
+  style.textContent = styles
   document.head.appendChild(style)
 
   var container = document.createElement('div')
