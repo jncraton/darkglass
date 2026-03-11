@@ -34,9 +34,7 @@ GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET")
 
 # embedded system prompt that contains institutional information
-SYSTEM_PROMPT = (
-    "Answer prospective student questions using the knowledge you have."
-)
+SYSTEM_PROMPT = "Answer prospective student questions using the knowledge you have."
 
 
 def get_db():
