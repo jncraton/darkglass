@@ -45,10 +45,12 @@ def load_config() -> dict:
 
 _CONFIG = load_config()
 
-GEMINI_API_KEY = _CONFIG.get("gemini_api_key")
+gemini_section = _CONFIG.get("gemini", {}) or {}
+GEMINI_API_KEY = gemini_section.get("api_key")
 
+context_section = _CONFIG.get("context", {}) or {}
 SYSTEM_PROMPT = (
-    _CONFIG.get("prompt")
+    context_section.get("prompt")
     or "Answer prospective student questions using the knowledge you have."
 )
 

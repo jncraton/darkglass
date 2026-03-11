@@ -9,10 +9,13 @@ Darkglass is a lightweight, embeddable chatbot designed for small colleges, prov
 
 ## Design
 
-The system is built on a minimalist "bare-metal" architecture, utilizing FastAPI and SQLite to ensure zero-configuration deployment on lightweight Linux VMs without the overhead of external databases. Configuration happens via an optional `darkglass.toml` file placed in the working directory; supported TOML keys are `gemini_api_key` and `prompt`. For example:
+The system is built on a minimalist "bare-metal" architecture, utilizing FastAPI and SQLite to ensure zero-configuration deployment on lightweight Linux VMs without the overhead of external databases. Configuration happens via an optional `darkglass.toml` file placed in the working directory; the layout consists of two sections. a `[gemini]` section supplies the `api_key` used for the model, and a `[context]` section supplies the `prompt` describing institutional knowledge. Example:
 
 ```toml
-gemini_api_key = "mysecretkey"
+[gemini]
+api_key = "mysecretkey"
+
+[context]
 prompt = "You are a helpful agent for Acme College."
 ```
 

@@ -11,12 +11,18 @@ from the `static/` directory and the simple landing page is `index.html`.
 
 Configuration
 
-The package now supports an optional `darkglass.toml` file in the
-working directory. When present the two supported keys are
+The package accepts an optional `darkglass.toml` file in the working
+directory. it must include two sections:
 
-- `gemini_api_key` – API key used by the model
-- `prompt` – system prompt describing institutional knowledge (defaults to
-  an embedded string if not provided)
+```toml
+[gemini]
+api_key = "..."
+
+[context]
+prompt = "..."
+```
+
+`api_key` is used for the model call; `prompt` is the system prompt.
 
 All other values are hard‑coded sensible defaults; there is no
 longer any support for configuration via environment variables. Administrative
