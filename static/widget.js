@@ -25,7 +25,7 @@
       width: 200px
     }
     #darkglass .header {
-      background: #007bff;
+      background: #8b2404;
       color: #fff;
       padding: 8px 10px;
       cursor: pointer;
