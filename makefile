@@ -2,9 +2,11 @@ all: deploy
 
 lint:
 	npx prettier@3.6.2 --check .
+	uvx black@24.1.0 --check .
 	
 format:
 	npx prettier@3.6.2 --write .
+	uvx black@24.1.0 .
 
 %.min.js: %.js
 	npx uglify-js@3.19.3 --compress --mangle -- $< > $@
