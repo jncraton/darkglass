@@ -47,6 +47,7 @@ _CONFIG = load_config()
 
 gemini_section = _CONFIG.get("gemini", {}) or {}
 GEMINI_API_KEY = gemini_section.get("api_key")
+GEMINI_MODEL = gemini_section.get("model") or "gemini-3.1-flash-lite-preview"
 
 context_section = _CONFIG.get("context", {}) or {}
 SYSTEM_PROMPT = (
@@ -208,7 +209,9 @@ def call_model(message: str) -> str:
     key = GEMINI_API_KEY
     if not key:
         return "[no API key configured]"
-    url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent"
+    model = GEMINI_MODEL
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
+
     headers = {"Content-Type": "application/json", "x-goog-api-key": key}
     prompt_text = f"{SYSTEM_PROMPT}\n\n{message}" if SYSTEM_PROMPT else message
     data = {"contents": [{"parts": [{"text": prompt_text}]}]}

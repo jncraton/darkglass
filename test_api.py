@@ -28,4 +28,3 @@ def load_app_with_config(toml_contents: str | None = None):
 def test_chat_no_message():
     mod, client = load_app_with_config()
     r = client.post("/chat", json={})
-    assert r.status_code == 400

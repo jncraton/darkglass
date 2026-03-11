@@ -17,6 +17,7 @@ directory. it must include two sections:
 ```toml
 [gemini]
 api_key = "..."
+model = "gemini-3.1-flash-lite-preview"  # optional, same default
 
 [context]
 prompt = "..."
