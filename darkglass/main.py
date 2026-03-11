@@ -218,21 +218,8 @@ def call_model(message: str) -> str:
     try:
         resp = urllib.request.urlopen(req, timeout=30)
         j = json.load(resp)
-        # Gemini responses typically carry a `candidates` array
-        if "candidates" in j and j["candidates"]:
-            first = j["candidates"][0]
-            if isinstance(first, dict) and "content" in first:
-                return str(first["content"]).strip()
-        # fall back to other common shapes
-        if "output" in j:
-            out = j["output"]
-            if isinstance(out, str):
-                return out.strip()
-            if isinstance(out, list) and out:
-                try:
-                    return str(out[0].get("content", "")).strip()
-                except Exception:
-                    pass
+
+        return j['candidates'][0]['content']['parts'][0]['text']
     except Exception as e:
         return f"[error calling model: {e}]"
     return ""
