@@ -14,15 +14,10 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
-
-# mount static directory for widget and admin assets
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 DB_PATH = os.environ.get("DB_PATH", "data.db")
-
-# simple in-memory session store {token:email}
 sessions = {}
-
 ADMIN_EMAILS = (
     os.environ.get("ADMIN_EMAILS", "").split(",")
     if os.environ.get("ADMIN_EMAILS")
@@ -33,38 +28,14 @@ COOKIE_SECRET = os.environ.get("COOKIE_SECRET", "secret")
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET")
 
-# load optional configuration from darkglass.toml.  the file is intended to
-# live in the same directory as the application and allows an operator to
-# specify default values that would otherwise come from the environment.
-#
-# the two supported keys at the moment are:
-#
-#   gemini_api_key – the API key used when calling the model.  this value
-#   overrides the GEMINI_API_KEY environment variable if both are present.
-#
-#   prompt – a system prompt describing institutional knowledge.  when set
-#    it replaces the hard‑coded SYSTEM_PROMPT below.
-#
-# the TOML file is optional; if it does not exist we fall back to environment
-# variables and finally to hard‑coded defaults.  loading happens once at import
-# time so tests may need to reload the module after creating a temporary
-# config file.
-
 
 def load_config() -> dict:
-    """Parse ``darkglass.toml`` if it exists and return the resulting dict.
-
-    Only the built‑in ``tomllib`` parser is used; the package requires
-    Python 3.11 or newer so the module should always be available.  If the
-    file cannot be found or fails to parse an empty dict is returned.
-    """
-
     path = "darkglass.toml"
     if not os.path.exists(path):
         return {}
     try:
         import tomllib
-    except ImportError:  # pragma: no cover - should never happen
+    except ImportError:
         return {}
     try:
         with open(path, "rb") as f:
@@ -73,13 +44,10 @@ def load_config() -> dict:
         return {}
 
 
-# parse configuration once
 _CONFIG = load_config()
 
-# the gemini key will be used by ``call_model``; config beats env var
 GEMINI_API_KEY = _CONFIG.get("gemini_api_key") or os.environ.get("GEMINI_API_KEY")
 
-# system prompt may come from config, fallback to environment or hard‑coded
 SYSTEM_PROMPT = (
     _CONFIG.get("prompt")
     or os.environ.get("SYSTEM_PROMPT")
@@ -111,9 +79,6 @@ def init_db():
 
 
 init_db()
-
-
-# utility to sign and verify cookies
 
 
 def sign_value(value: str) -> str:
@@ -150,12 +115,10 @@ def require_admin(user: Optional[str] = Depends(current_user)):
 
 @app.post("/chat")
 def chat_endpoint(payload: dict):
-    # expects {"message": "..."}
     message = payload.get("message")
     if not message:
         raise HTTPException(status_code=400, detail="message is required")
     answer = call_model(message)
-    # log interaction
     conn = get_db()
     c = conn.cursor()
     c.execute(
@@ -207,7 +170,6 @@ def login_redirect():
 def auth_callback(code: Optional[str] = None, response: Response = None):
     if not code:
         raise HTTPException(status_code=400, detail="code is required")
-    # exchange code for token
     data = urllib.parse.urlencode(
         {
             "code": code,
@@ -230,7 +192,6 @@ def auth_callback(code: Optional[str] = None, response: Response = None):
     if not access_token:
         raise HTTPException(status_code=400, detail="failed to obtain access token")
 
-    # fetch userinfo
     req2 = urllib.request.Request(
         f"https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token={urllib.parse.quote(access_token)}"
     )
@@ -239,7 +200,6 @@ def auth_callback(code: Optional[str] = None, response: Response = None):
     email = userinfo.get("email")
     if not email:
         raise HTTPException(status_code=400, detail="email not provided")
-    # create session token
     token = hashlib.sha256(os.urandom(32)).hexdigest()
     sessions[token] = email
     signed = sign_value(token)
@@ -249,26 +209,20 @@ def auth_callback(code: Optional[str] = None, response: Response = None):
 
 
 def call_model(message: str) -> str:
-    # use the Gemini generative language API directly
     key = GEMINI_API_KEY
     if not key:
         return "[no API key configured]"
-    # allow overriding the endpoint for testing or future models
     url = os.environ.get(
         "GEMINI_API_URL",
         "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent",
     )
     headers = {"Content-Type": "application/json", "x-goog-api-key": key}
-    # build request payload in the shape expected by the REST call
-    # include the embedded system prompt before user text to preserve
-    # institutional information in every request
     prompt_text = f"{SYSTEM_PROMPT}\n\n{message}" if SYSTEM_PROMPT else message
     data = {"contents": [{"parts": [{"text": prompt_text}]}]}
     req = urllib.request.Request(url, data=json.dumps(data).encode(), headers=headers)
     try:
         resp = urllib.request.urlopen(req, timeout=30)
         j = json.load(resp)
-
         return j["candidates"][0]["content"]["parts"][0]["text"]
     except Exception as e:
         return f"[error calling model: {e}]"
@@ -277,7 +231,6 @@ def call_model(message: str) -> str:
 
 @app.get("/")
 def index():
-    # simple landing page that could embed widget instructions
     html = """
     <html><head><title>Darkglass</title></head>
     <body>

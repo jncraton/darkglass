@@ -7,27 +7,13 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 
 
-# Helper to load the application fresh, optionally writing a config file first.
-
-
 def load_app_with_config(toml_contents: str | None = None):
-    """Return a fresh ``main`` module instance and a TestClient.
-
-    If ``toml_contents`` is provided the function creates a temporary working
-    directory, writes a ``darkglass.toml`` file containing the text, and
-    adjusts ``os.getcwd`` accordingly so that ``main`` will load the file when
-    imported.  Otherwise, the current working directory is used without any
-    config file.  The returned tuple is ``(module, client)``.
-    """
-
-    # create temporary working directory if we need to write a config file
     if toml_contents is not None:
         temp = tempfile.TemporaryDirectory()
         old_cwd = os.getcwd()
         os.chdir(temp.name)
         Path("darkglass.toml").write_text(toml_contents)
     try:
-        # reload to ensure module-level config is re-evaluated
         if "darkglass.main" in importlib.sys.modules:
             importlib.reload(importlib.import_module("darkglass.main"))
         mod = importlib.import_module("darkglass.main")
@@ -46,7 +32,6 @@ def test_chat_no_message():
 
 
 def test_config_file_overrides_environment(tmp_path, monkeypatch):
-    # make sure we ignore any existing env var
     monkeypatch.delenv("GEMINI_API_KEY", raising=False)
     monkeypatch.delenv("SYSTEM_PROMPT", raising=False)
     cfg = """
@@ -67,13 +52,11 @@ def test_environment_fallback(monkeypatch):
 
 
 def test_call_model_builds_prompt(monkeypatch):
-    # simulate a simple API response and capture the request payload
     cfg = """
     gemini_api_key = "k"
     prompt = "PREAMBLE"
     """
     mod, client = load_app_with_config(cfg)
-
     captured = {}
 
     class DummyResp:
@@ -86,7 +69,6 @@ def test_call_model_builds_prompt(monkeypatch):
             return self._body
 
     def fake_urlopen(req, timeout=None):
-        # store the payload and return a dummy response
         try:
             data = req.data.decode()
         except Exception:
@@ -99,8 +81,6 @@ def test_call_model_builds_prompt(monkeypatch):
     monkeypatch.setattr("darkglass.main.urllib.request.urlopen", fake_urlopen)
     answer = mod.call_model("question")
     assert answer == "reply"
-    # prompt should be prepended
     text = captured["data"]["contents"][0]["parts"][0]["text"]
     assert text.startswith("PREAMBLE")
-    # header uses configured key
     assert captured["headers"]["x-goog-api-key"] == "k"
