@@ -39,3 +39,7 @@ environment, runs pytest, and exercises both API and browser tests.
 
 Format code using `make format` which runs Prettier on JS/HTML and
 black on Python.
+
+## Style
+
+Never comment code. Use docstrings, but only for examples run via doctest.
