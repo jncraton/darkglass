@@ -18,5 +18,8 @@ test:
 
 deploy: dep.css
 
+serve:
+	uv run --with fastapi[standard]==0.135.1 fastapi dev
+
 clean:
 	rm -rf .pytest_cache __pycache__ dep.css
