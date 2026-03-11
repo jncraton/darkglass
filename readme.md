@@ -1,5 +1,10 @@
 # Darkglass
 
+[![Lint](https://github.com/jncraton/college-agent/actions/workflows/lint.yml/badge.svg)](https://github.com/jncraton/college-agent/actions/workflows/lint.yml)
+[![Test](https://github.com/jncraton/college-agent/actions/workflows/test.yml/badge.svg)](https://github.com/jncraton/college-agent/actions/workflows/test.yml)
+[![Deploy](https://github.com/jncraton/college-agent/actions/workflows/deploy.yml/badge.svg)](https://github.com/jncraton/college-agent/actions/workflows/deploy.yml)
+[![Release](https://github.com/jncraton/college-agent/actions/workflows/release.yml/badge.svg)](https://github.com/jncraton/college-agent/actions/workflows/release.yml)
+
 Darkglass is a lightweight, embeddable chatbot designed for small colleges, providing prospective students with automated responses while logging interactions for administrative review through a minimal, Python-based stack.
 
 ## Design
