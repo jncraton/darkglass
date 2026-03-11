@@ -223,15 +223,3 @@ def call_model(message: str) -> str:
     except Exception as e:
         return f"[error calling model: {e}]"
     return ""
-
-
-@app.get("/")
-def index():
-    html = """
-    <html><head><title>Darkglass</title></head>
-    <body>
-    <h1>Darkglass</h1>
-    <p>Include <code>&lt;script src=\"/static/widget.js\"&gt;&lt;/script&gt;</code> to embed chat widget.</p>
-    </body></html>
-    """
-    return HTMLResponse(html)
