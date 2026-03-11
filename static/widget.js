@@ -119,16 +119,16 @@
           // in. `document.currentScript` refers to the <script> element whose
           // code is currently executing; if that's unavailable we fall back to
           // the last script on the page which is almost always the right one.
-          let script = document.currentScript;
+          let script = document.currentScript
           if (!script) {
-            const scripts = document.getElementsByTagName('script');
-            script = scripts[scripts.length - 1];
+            const scripts = document.getElementsByTagName('script')
+            script = scripts[scripts.length - 1]
           }
           if (!script || !script.src) {
-            return window.location.origin;
+            return window.location.origin
           }
-          return new URL(script.src, window.location).origin;
-        })();
+          return new URL(script.src, window.location).origin
+        })()
 
         const r = await fetch(base + '/chat', {
           method: 'POST',
