@@ -5,9 +5,11 @@ build-backend = "hatchling.build"
 [project]
 name = "college-agent"
 version = "0.1.0"
-description = "Embeddable chatbot for small Christian institutions"
+description = "Embeddable chatbot for small colleges"
 readme = "readme.md"
-authors = [{name = ""}]
+authors = [
+    { name = "Jon Craton", email = "jncraton@gmail.com" }
+]
 license = {text = "MIT"}
 dependencies = [
     "fastapi==0.135.1",
