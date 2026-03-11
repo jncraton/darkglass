@@ -22,7 +22,6 @@
       transition: height 0.3s ease
     }
     #darkglass.closed {
-      height: 40px;
       width: 200px
     }
     #darkglass .header {
