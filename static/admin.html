@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html><head><title>Admin - College Agent</title></head><body>
+<h1>Logs</h1>
+<table border="1" id="logs"><thead><tr><th>Time</th><th>User</th><th>Assistant</th></tr></thead><tbody></tbody></table>
+<script>
+fetch('/logs').then(r=>r.json()).then(data=>{
+  var tbody=document.querySelector('#logs tbody');
+  data.forEach(function(row){
+    var tr=document.createElement('tr');
+    var d=new Date(row.ts*1000).toLocaleString();
+    tr.innerHTML='<td>'+d+'</td><td>'+row.user_message+'</td><td>'+row.assistant_message+'</td>';
+    tbody.appendChild(tr);
+  });
+});
+</script>
+</body></html>}
