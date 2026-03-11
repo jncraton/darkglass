@@ -1,12 +1,78 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <title>Darkglass</title>
+    <meta charset="UTF-8" />
+    <title>Anderson University Clone</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: sans-serif;
+        color: #333;
+      }
+      header {
+        background: #000;
+        color: #fff;
+        padding: 1rem;
+        text-align: center;
+      }
+      nav {
+        background: #f4f4f4;
+        padding: 1rem;
+        text-align: center;
+      }
+      nav a {
+        margin: 0 1rem;
+        text-decoration: none;
+        color: #d35400;
+        font-weight: bold;
+      }
+      .hero {
+        background: #d35400;
+        color: #fff;
+        padding: 4rem 1rem;
+        text-align: center;
+      }
+      .content {
+        padding: 2rem;
+        max-width: 800px;
+        margin: auto;
+      }
+      .cta-button {
+        display: inline-block;
+        background: #000;
+        color: #fff;
+        padding: 1rem 2rem;
+        text-decoration: none;
+        margin-top: 1rem;
+      }
+    </style>
   </head>
   <body>
-    <h1>Darkglass</h1>
-    <p>Test page for darkglass widget.</p>
+    <header>
+      <h1>Anderson University</h1>
+    </header>
+
+    <nav>
+      <a href="#">Visit</a>
+      <a href="#">Apply</a>
+      <a href="#">Give</a>
+    </nav>
+
+    <section class="hero">
+      <h2>Fall in the valley to become someone</h2>
+      <p>Educating students for a life of faith and service.</p>
+      <a href="#" class="cta-button">Explore Majors</a>
+    </section>
+
+    <main class="content">
+      <h3>News and Events</h3>
+      <ul>
+        <li>School of Music and Performing Arts Revue</li>
+        <li>Student Album Release Concert</li>
+        <li>Samuel Woods and Harmon Hann</li>
+      </ul>
+    </main>
+
     <script src="/static/widget.js"></script>
   </body>
 </html>
