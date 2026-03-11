@@ -30,7 +30,7 @@ def test_widget_present_and_toggle(root):
     assert bot in ("20px", "20px")
 
     header = widget.locator(".header")
-    expect(header).to_have_text("Chat with us")
+    expect(header).to_have_text("Chat")
 
     # initial state is closed; body should not be visible
     body = widget.locator(".body")

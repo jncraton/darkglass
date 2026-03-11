@@ -63,7 +63,7 @@
   container.className = 'closed'
 
   container.innerHTML = `
-    <div class="header">Chat with us</div>
+    <div class="header">Chat</div>
     <div class="body">
       <div class="messages"></div>
       <div class="input-container">
