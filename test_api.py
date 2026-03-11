@@ -3,7 +3,7 @@ import tempfile
 import sqlite3
 from fastapi.testclient import TestClient
 
-import main
+from darkglass import main
 
 client = TestClient(main.app)
 

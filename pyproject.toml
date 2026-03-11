@@ -3,9 +3,9 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "college-agent"
+name = "darkglass"
 version = "0.1.0"
-description = "Embeddable chatbot for small colleges"
+description = "Embeddable chatbot for small Christian institutions (Darkglass)"
 readme = "readme.md"
 authors = [
     { name = "Jon Craton", email = "jncraton@gmail.com" }
@@ -16,7 +16,7 @@ dependencies = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["pillar-path"]
+packages = ["darkglass"]
 
 [tool.hatch.envs.default]
 dependencies = [

@@ -1,6 +1,6 @@
 (function(){
   var el = document.createElement('div');
-  el.id = 'college-agent';
+  el.id = 'darkglass';
   el.style.border = '1px solid #ccc';
   el.style.padding = '10px';
   el.style.maxWidth = '400px';

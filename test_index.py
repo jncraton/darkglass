@@ -13,4 +13,4 @@ def root(page: Page):
 
 
 def test_page_title(root):
-    expect(root).to_have_title("College Agent")
+    expect(root).to_have_title("Darkglass")
