@@ -1,4 +1,10 @@
 ;(() => {
+  // inject markdown parser
+  const markedScript = document.createElement('script')
+  markedScript.src = 'https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js'
+  markedScript.defer = true
+  document.head.appendChild(markedScript)
+
   const styles = `
     #darkglass {
       position: fixed;
@@ -114,7 +120,11 @@
         })
         const j = await r.json()
         const q = document.createElement('div')
-        q.textContent = 'Agent: ' + j.answer
+        if (window.marked) {
+          q.innerHTML = 'Agent: ' + marked.parse(j.answer)
+        } else {
+          q.textContent = 'Agent: ' + j.answer
+        }
         body.appendChild(q)
         body.scrollTop = body.scrollHeight
       } catch (err) {
