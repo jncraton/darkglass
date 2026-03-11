@@ -208,7 +208,7 @@ def call_model(message: str) -> str:
     # allow overriding the endpoint for testing or future models
     url = os.environ.get(
         "GEMINI_API_URL",
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent",
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent",
     )
     headers = {"Content-Type": "application/json", "x-goog-api-key": key}
     # build request payload in the shape expected by the REST call
