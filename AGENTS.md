@@ -19,8 +19,6 @@ working directory. When present the two supported keys are
 - `prompt` – system prompt describing institutional knowledge (falls
   back to the `SYSTEM_PROMPT` environment variable or a built-in default)
 
-The TOML parser uses Python's built-in `tomllib` module; Python 3.11 or later is required.
-
 Key environment variables
 
 - `GEMINI_API_KEY` – required to make model requests (returns a placeholder
@@ -31,13 +29,6 @@ Key environment variables
 - `COOKIE_SECRET` – secret used to sign session cookies.
 - `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `OAUTH_REDIRECT` – for Google
   OAuth to access `/admin` and `/logs`.
-
-## Running the service
-
-Use `make serve` to start a development server (FastAPI uvicorn) on
-port 8000. The chat widget can be embedded by including
-`<script src="/static/widget.js"></script>` on any page; samples are
-in `index.html` and `static/admin.html`.
 
 ## Testing
 
