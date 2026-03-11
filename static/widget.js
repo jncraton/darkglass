@@ -98,8 +98,7 @@
       iframe.style.height = e.data.height + 'px'
     }
   })
-// append iframe to document; sizing will be controlled by messages from within
-// the frame itself.
-document.body.appendChild(iframe);
-
-})();
+  // append iframe to document; sizing will be controlled by messages from within
+  // the frame itself.
+  document.body.appendChild(iframe)
+})()
