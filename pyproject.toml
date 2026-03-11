@@ -1,0 +1,27 @@
+[build-system]
+requires = ["hatchling>=1.11.1"]
+build-backend = "hatchling.build"
+
+[project]
+name = "college-agent"
+version = "0.1.0"
+description = "Embeddable chatbot for small Christian institutions"
+readme = "readme.md"
+authors = [{name = ""}]
+license = {text = "MIT"}
+dependencies = [
+    "fastapi==0.135.1",
+]
+
+[tool.hatch.build]
+targets = ["sdist", "wheel"]
+
+[tool.hatch.envs.default]
+dependencies = [
+    "fastapi==0.135.1",
+]
+
+[tool.hatch.envs.tests]
+dependencies = [
+    "pytest-playwright==0.7.2",
+]
