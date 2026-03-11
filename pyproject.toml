@@ -17,6 +17,9 @@ dependencies = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["darkglass"]
+exclude = [
+  'darkglass.toml'
+]
 
 [tool.hatch.envs.default]
 dependencies = [
