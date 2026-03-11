@@ -63,95 +63,43 @@
   style.textContent = styles
   document.head.appendChild(style)
 
-  const container = document.createElement('div')
-  container.id = 'darkglass'
-  container.className = 'closed'
+  // replace the previous standalone widget with an iframe. the host page
+  // may be a different origin, so all network traffic should go through the
+  // origin that served this script. we compute that once and then load our
+  // real UI inside a same-origin HTML page under /static.
+  const base = (() => {
+    let script = document.currentScript
+    if (!script) {
+      const scripts = document.getElementsByTagName('script')
+      script = scripts[scripts.length - 1]
+    }
+    if (!script || !script.src) {
+      return window.location.origin
+    }
+    return new URL(script.src, window.location).origin
+  })()
 
-  container.innerHTML = `
-    <div class="header">Chat</div>
-    <div class="body">
-      <div class="messages"></div>
-      <div class="input-container">
-        <input type="text" placeholder="Ask a question...">
-      </div>
-    </div>
-  `
+  const iframe = document.createElement('iframe')
+  iframe.id = 'darkglass'
+  iframe.src = base + '/static/widget_frame.html'
+  // initial sizing; will be adjusted by messages from the frame
+  iframe.style.position = 'fixed'
+  iframe.style.bottom = '20px'
+  iframe.style.right = '20px'
+  iframe.style.width = '300px'
+  iframe.style.maxWidth = '80vw'
+  iframe.style.height = '40px'
+  iframe.style.border = '0'
+  iframe.style.zIndex = '9999'
+  iframe.style.transition = 'height 0.3s ease'
 
-  const header = container.querySelector('.header')
-  const body = container.querySelector('.messages')
-  const input = container.querySelector('input')
-
-  header.addEventListener('click', (e) => {
-    e.stopPropagation()
-    container.classList.toggle('closed')
-    if (!container.classList.contains('closed')) {
-      input.focus()
+  window.addEventListener('message', (e) => {
+    if (e.data && e.data.type === 'height') {
+      iframe.style.height = e.data.height + 'px'
     }
   })
+// append iframe to document; sizing will be controlled by messages from within
+// the frame itself.
+document.body.appendChild(iframe);
 
-  input.addEventListener('click', (e) => {
-    e.stopPropagation()
-  })
-
-  document.addEventListener('click', (e) => {
-    if (!container.classList.contains('closed')) {
-      if (!container.contains(e.target)) {
-        container.classList.add('closed')
-      }
-    }
-  })
-  input.addEventListener('keydown', async (e) => {
-    if (e.key === 'Enter') {
-      const text = input.value.trim()
-      if (!text) return
-
-      const p = document.createElement('div')
-      p.textContent = 'You: ' + text
-      body.appendChild(p)
-
-      input.value = ''
-
-      try {
-        const base = (() => {
-          // derive the origin of the script that inserted this widget. when the
-          // widget is embedded on a third‑party site we need to talk back to the
-          // host where the script was served from, not the page we're sitting
-          // in. `document.currentScript` refers to the <script> element whose
-          // code is currently executing; if that's unavailable we fall back to
-          // the last script on the page which is almost always the right one.
-          let script = document.currentScript
-          if (!script) {
-            const scripts = document.getElementsByTagName('script')
-            script = scripts[scripts.length - 1]
-          }
-          if (!script || !script.src) {
-            return window.location.origin
-          }
-          return new URL(script.src, window.location).origin
-        })()
-
-        const r = await fetch(base + '/chat', {
-          method: 'POST',
-          headers: {'content-type': 'application/json'},
-          body: JSON.stringify({message: text}),
-        })
-        const j = await r.json()
-        const q = document.createElement('div')
-        if (window.marked) {
-          q.innerHTML = marked.parse(j.answer)
-        } else {
-          q.textContent = j.answer
-        }
-        const hr = document.createElement('hr')
-        body.appendChild(hr)
-        body.appendChild(q)
-
-        body.scrollTop = body.scrollHeight
-      } catch (err) {
-        console.error(err)
-      }
-    }
-  })
-
-  document.body.appendChild(container)
-})()
+})();

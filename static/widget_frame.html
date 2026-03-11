@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+        font-family: sans-serif;
+        font-size: 14px;
+      }
+      #darkglass {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        box-shadow: none;
+        border: none;
+        background: transparent;
+      }
+      #darkglass.closed {
+        height: 40px;
+      }
+      #darkglass .header {
+        background: #8b2404;
+        color: #fff;
+        padding: 8px 10px;
+        cursor: pointer;
+        user-select: none;
+      }
+      #darkglass .body {
+        display: flex;
+        flex-direction: column;
+        height: calc(100% - 40px);
+        background: #fff;
+      }
+      #darkglass.closed .body {
+        display: none;
+      }
+      #darkglass .messages {
+        flex: 1;
+        padding: 10px;
+        overflow: auto;
+        background: #fafafa;
+      }
+      #darkglass .input-container {
+        border-top: 1px solid #ddd;
+        padding: 5px;
+      }
+      #darkglass .input-container input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 6px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="darkglass" class="closed">
+      <div class="header">Chat</div>
+      <div class="body">
+        <div class="messages"></div>
+        <div class="input-container">
+          <input type="text" placeholder="Ask a question..." />
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
+    <script>
+      // helper to tell parent about our height needs
+      function postHeight(closed) {
+        const h = closed ? 40 : 300
+        window.parent.postMessage({type: 'height', height: h}, '*')
+      }
+
+      const header = document.querySelector('.header')
+      const bodyEl = document.querySelector('.messages')
+      const input = document.querySelector('input')
+      const container = document.getElementById('darkglass')
+
+      header.addEventListener('click', (e) => {
+        e.stopPropagation()
+        container.classList.toggle('closed')
+        if (!container.classList.contains('closed')) {
+          input.focus()
+        }
+        postHeight(container.classList.contains('closed'))
+      })
+
+      input.addEventListener('click', (e) => {
+        e.stopPropagation()
+      })
+
+      document.addEventListener('click', (e) => {
+        if (!container.classList.contains('closed')) {
+          if (!container.contains(e.target)) {
+            container.classList.add('closed')
+            postHeight(true)
+          }
+        }
+      })
+
+      input.addEventListener('keydown', async (e) => {
+        if (e.key === 'Enter') {
+          const text = input.value.trim()
+          if (!text) return
+
+          const p = document.createElement('div')
+          p.textContent = 'You: ' + text
+          bodyEl.appendChild(p)
+
+          input.value = ''
+
+          try {
+            const r = await fetch('/chat', {
+              method: 'POST',
+              headers: {'content-type': 'application/json'},
+              body: JSON.stringify({message: text}),
+            })
+            const j = await r.json()
+            const q = document.createElement('div')
+            if (window.marked) {
+              q.innerHTML = marked.parse(j.answer)
+            } else {
+              q.textContent = j.answer
+            }
+            const hr = document.createElement('hr')
+            bodyEl.appendChild(hr)
+            bodyEl.appendChild(q)
+
+            bodyEl.scrollTop = bodyEl.scrollHeight
+          } catch (err) {
+            console.error(err)
+          }
+        }
+      })
+
+      // notify parent of our starting (closed) size
+      postHeight(true)
+    </script>
+  </body>
+</html>
