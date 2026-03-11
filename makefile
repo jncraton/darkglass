@@ -12,8 +12,8 @@ format:
 	npx uglify-js@3.19.3 --compress --mangle -- $< > $@
 
 test:
-	uv run --python 3.11 --with fastapi[standard]==0.135.1 --with pytest-playwright==0.7.2 --with toml python -m playwright install chromium firefox
-	uv run --python 3.11  --with fastapi[standard]==0.135.1 --with pytest-playwright==0.7.2 --with toml python -m pytest --browser chromium --browser firefox
+	uv run --python 3.11 --with fastapi[standard]==0.135.1 --with pytest-playwright==0.7.2 python -m playwright install chromium firefox
+	uv run --python 3.11  --with fastapi[standard]==0.135.1 --with pytest-playwright==0.7.2 python -m pytest --browser chromium --browser firefox
 
 serve:
 	uv run --python 3.11 --with fastapi[standard]==0.135.1 fastapi dev

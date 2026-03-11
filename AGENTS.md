@@ -19,9 +19,7 @@ working directory. When present the two supported keys are
 - `prompt` – system prompt describing institutional knowledge (falls
   back to the `SYSTEM_PROMPT` environment variable or a built-in default)
 
-Values can still be supplied via environment variables as before. The
-file is parsed once at import time, so tests and the application itself
-load the configuration on start-up.
+The TOML parser uses Python's built-in `tomllib` module; Python 3.11 or later is required.
 
 Key environment variables
 

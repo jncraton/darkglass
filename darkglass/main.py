@@ -54,9 +54,9 @@ GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET")
 def load_config() -> dict:
     """Parse ``darkglass.toml`` if it exists and return the resulting dict.
 
-    Uses the standard ``tomllib`` library (Python 3.11+) and falls back to
-    ``toml`` if not available.  If the file cannot be found or fails to parse
-    an empty dict is returned.
+    Only the built‑in ``tomllib`` parser is used; the package requires
+    Python 3.11 or newer so the module should always be available.  If the
+    file cannot be found or fails to parse an empty dict is returned.
     """
 
     path = "darkglass.toml"
@@ -64,12 +64,8 @@ def load_config() -> dict:
         return {}
     try:
         import tomllib
-    except ImportError:  # pragma: no cover - python<3.11
-        try:
-            import toml as tomllib  # type: ignore
-        except ImportError:
-            # if toml isn't installed we behave as if the file were missing
-            return {}
+    except ImportError:  # pragma: no cover - should never happen
+        return {}
     try:
         with open(path, "rb") as f:
             return tomllib.load(f)
