@@ -13,7 +13,7 @@ your licenses.
 The licensor grants you a copyright license for the software
 to do everything you might do with the software that would
 otherwise infringe the licensor's copyright in it for any
-permitted purpose.  However, you may only make changes or
+permitted purpose. However, you may only make changes or
 new works based on the software according to [Changes and New
 Works License](#changes-and-new-works-license), and you may
 not distribute copies of the software.
@@ -45,7 +45,7 @@ behalf of you or your company, is use for a permitted purpose.
 
 These terms do not allow you to sublicense or transfer any of
 your licenses to anyone else, or prevent the licensor from
-granting licenses to anyone else.  These terms do not imply
+granting licenses to anyone else. These terms do not imply
 any other licenses.
 
 ## Patent Defense
@@ -64,10 +64,10 @@ end immediately.
 
 ## No Liability
 
-***As far as the law allows, the software comes as is, without
+**_As far as the law allows, the software comes as is, without
 any warranty or condition, and the licensor will not be liable
 to you for any damages arising out of these terms or the use
-or nature of the software, under any kind of legal claim.***
+or nature of the software, under any kind of legal claim._**
 
 ## Definitions
 
@@ -81,10 +81,10 @@ terms.
 **Your company** is any legal entity, sole proprietorship,
 or other kind of organization that you work for, plus all
 organizations that have control over, are under the control of,
-or are under common control with that organization.  **Control**
+or are under common control with that organization. **Control**
 means ownership of substantially all the assets of an entity,
 or the power to direct its management and policies by vote,
-contract, or otherwise.  Control can be direct or indirect.
+contract, or otherwise. Control can be direct or indirect.
 
 **Your licenses** are all the licenses granted to you for the
 software under these terms.
