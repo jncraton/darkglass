@@ -219,7 +219,7 @@ def call_model(message: str) -> str:
         resp = urllib.request.urlopen(req, timeout=30)
         j = json.load(resp)
 
-        return j['candidates'][0]['content']['parts'][0]['text']
+        return j["candidates"][0]["content"]["parts"][0]["text"]
     except Exception as e:
         return f"[error calling model: {e}]"
     return ""
