@@ -112,7 +112,25 @@
       input.value = ''
 
       try {
-        const r = await fetch('/chat', {
+        const base = (() => {
+          // derive the origin of the script that inserted this widget. when the
+          // widget is embedded on a third‑party site we need to talk back to the
+          // host where the script was served from, not the page we're sitting
+          // in. `document.currentScript` refers to the <script> element whose
+          // code is currently executing; if that's unavailable we fall back to
+          // the last script on the page which is almost always the right one.
+          let script = document.currentScript;
+          if (!script) {
+            const scripts = document.getElementsByTagName('script');
+            script = scripts[scripts.length - 1];
+          }
+          if (!script || !script.src) {
+            return window.location.origin;
+          }
+          return new URL(script.src, window.location).origin;
+        })();
+
+        const r = await fetch(base + '/chat', {
           method: 'POST',
           headers: {'content-type': 'application/json'},
           body: JSON.stringify({message: text}),

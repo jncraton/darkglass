@@ -30,5 +30,5 @@ prompt = "You are a helpful agent for Acme College."
 let darkglass = document.createElement('script')
 darkglass.src = 'http://localhost:8000/static/widget.js'
 darkglass.defer = true
-document.head.appendChild(darkglass)
+document.body.appendChild(darkglass)
 ```
