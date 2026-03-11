@@ -23,3 +23,12 @@ model = "gemini-3.1-flash-lite-preview"
 [context]
 prompt = "You are a helpful agent for Acme College."
 ```
+
+## Add to arbitrary site via dev tools:
+
+```js
+let darkglass = document.createElement('script')
+darkglass.src = 'http://localhost:8000/static/widget.js'
+darkglass.defer = true
+document.head.appendChild(darkglass)
+```
