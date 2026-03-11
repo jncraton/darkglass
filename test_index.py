@@ -14,7 +14,7 @@ def root(page: Page):
 
 
 def test_page_title(root):
-    expect(root).to_have_title("Darkglass")
+    expect(root).to_have_title("Example University")
 
 
 def test_widget_present_and_toggle(root):
