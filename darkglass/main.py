@@ -23,7 +23,11 @@ DB_PATH = os.environ.get("DB_PATH", "data.db")
 # simple in-memory session store {token:email}
 sessions = {}
 
-ADMIN_EMAILS = os.environ.get("ADMIN_EMAILS", "").split(",") if os.environ.get("ADMIN_EMAILS") else []
+ADMIN_EMAILS = (
+    os.environ.get("ADMIN_EMAILS", "").split(",")
+    if os.environ.get("ADMIN_EMAILS")
+    else []
+)
 COOKIE_NAME = "admin_session"
 COOKIE_SECRET = os.environ.get("COOKIE_SECRET", "secret")
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
@@ -64,6 +68,7 @@ init_db()
 
 # utility to sign and verify cookies
 
+
 def sign_value(value: str) -> str:
     sig = hmac.new(COOKIE_SECRET.encode(), value.encode(), hashlib.sha256).hexdigest()
     return f"{value}|{sig}"
@@ -73,7 +78,9 @@ def verify_signed(s: str) -> Optional[str]:
     if "|" not in s:
         return None
     value, sig = s.rsplit("|", 1)
-    expected = hmac.new(COOKIE_SECRET.encode(), value.encode(), hashlib.sha256).hexdigest()
+    expected = hmac.new(
+        COOKIE_SECRET.encode(), value.encode(), hashlib.sha256
+    ).hexdigest()
     if hmac.compare_digest(expected, sig):
         return value
     return None
@@ -139,7 +146,9 @@ def login_redirect():
         "client_id": GOOGLE_CLIENT_ID,
         "response_type": "code",
         "scope": "openid email",
-        "redirect_uri": os.environ.get("OAUTH_REDIRECT", "http://localhost:8000/auth/callback"),
+        "redirect_uri": os.environ.get(
+            "OAUTH_REDIRECT", "http://localhost:8000/auth/callback"
+        ),
         "access_type": "offline",
         "prompt": "consent",
     }
@@ -157,7 +166,9 @@ def auth_callback(code: Optional[str] = None, response: Response = None):
             "code": code,
             "client_id": GOOGLE_CLIENT_ID,
             "client_secret": GOOGLE_CLIENT_SECRET,
-            "redirect_uri": os.environ.get("OAUTH_REDIRECT", "http://localhost:8000/auth/callback"),
+            "redirect_uri": os.environ.get(
+                "OAUTH_REDIRECT", "http://localhost:8000/auth/callback"
+            ),
             "grant_type": "authorization_code",
         }
     ).encode()

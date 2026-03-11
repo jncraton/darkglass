@@ -6,6 +6,7 @@ from pathlib import Path
 
 file_url = Path("index.html").resolve().as_uri()
 
+
 @pytest.fixture
 def root(page: Page):
     page.goto(f"{file_url}#")
