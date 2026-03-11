@@ -35,7 +35,6 @@ GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET")
 
 # embedded system prompt that contains institutional information
 SYSTEM_PROMPT = (
-    "You are a helpful assistant for a small Christian institution. "
     "Answer prospective student questions using the knowledge you have."
 )
 
