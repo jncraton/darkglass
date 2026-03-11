@@ -84,13 +84,10 @@
     }
   })
 
-  // prevent clicks inside the input from bubbling; we only want an outside
-  // click to collapse the widget
   input.addEventListener('click', (e) => {
     e.stopPropagation()
   })
 
-  // clicking anywhere else should collapse if open
   document.addEventListener('click', (e) => {
     if (!container.classList.contains('closed')) {
       if (!container.contains(e.target)) {
