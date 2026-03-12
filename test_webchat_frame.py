@@ -23,7 +23,7 @@ def test_widget_present_and_toggle(root):
     pos = widget.evaluate("el => getComputedStyle(el).position")
     assert pos == "relative"
     closed_height = widget.evaluate("el => getComputedStyle(el).height")
-    assert closed_height == "32px"
+    assert closed_height == "36px"
 
     header = widget.locator(".header")
     expect(header).to_have_text("Chat")

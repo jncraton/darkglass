@@ -22,12 +22,12 @@
         background: transparent;
       }
       #darkglass.closed {
-        height: 32px;
+        height: 36px;
       }
       #darkglass .header {
         background: #8b2404;
         color: #fff;
-        padding: 8px 10px;
+        padding: 10px;
         cursor: pointer;
         user-select: none;
         font-size: 16px;
@@ -35,7 +35,7 @@
       #darkglass .body {
         display: flex;
         flex-direction: column;
-        height: calc(100% - 32px);
+        height: calc(100% - 36px);
         background: #fff;
       }
       #darkglass.closed .body {
@@ -76,7 +76,7 @@
     <script>
       // helper to tell parent about our height needs
       function postHeight(closed) {
-        const h = closed ? 32 : 300
+        const h = closed ? 36 : 300
         window.parent.postMessage({type: 'height', height: h}, '*')
       }
 

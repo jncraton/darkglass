@@ -11,7 +11,7 @@
       bottom: 20px;
       right: 20px;
       width: 300px;
-      height: 32px;
+      height: 36px;
       max-width: 80vw;
       font-family: sans-serif;
       font-size: 16px;
@@ -89,7 +89,7 @@
   iframe.style.right = '20px'
   iframe.style.width = '300px'
   iframe.style.maxWidth = '80vw'
-  iframe.style.height = '32px'
+  iframe.style.height = '36px'
   iframe.style.border = '0'
   iframe.style.zIndex = '9999'
   iframe.style.transition = 'height 0.3s ease'
