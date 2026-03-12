@@ -55,6 +55,15 @@ SYSTEM_PROMPT = (
     or "Answer prospective student questions using the knowledge you have."
 )
 
+# google oauth configuration may be provided in a [google] section of the
+# config file; values are optional and fall back to the hardcoded defaults
+# above.  the redirect URI is only required if the application is running
+# somewhere other than localhost:8000.
+google_section = _CONFIG.get("google", {}) or {}
+GOOGLE_CLIENT_ID = google_section.get("client_id")
+GOOGLE_CLIENT_SECRET = google_section.get("client_secret")
+# override default redirect if supplied in config
+OAUTH_REDIRECT = google_section.get("redirect") or OAUTH_REDIRECT
 
 def get_db():
     conn = sqlite3.connect(DB_PATH, check_same_thread=False)
