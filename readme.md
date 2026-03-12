@@ -48,10 +48,15 @@ admins = ["alice@example.com", "bob@example.com"]
 
 ## Usage
 
-1. `pip install darkglass`
-2. Set API keys, system prompt, and authorized users in `darkglass.toml`
-3. Run `darkglass` to start the production server in the current directory (use `--dev` to enable reload for development). The frontend demo is available at <http://localhost:8000/static/index.html>
-4. Deploy to production
+1. Set API keys, system prompt, and authorized users in `darkglass.toml`
+2. Run `uvx darkglass` or `pipx darkglass` to launch production server
+3. Use the demo page to test the config: <http://localhost:8000/static/index.html>
+4. Update reverse proxy configs as required to route requests to darkglass.
+5. Add the following snippet to your site, replacing the URL based on your chosen production endpoint:
+
+```html
+<script src="https://darkglass.example.com/static/webchat.js"></script>
+```
 
 ## Add to arbitrary site via dev tools
 
