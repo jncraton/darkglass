@@ -113,6 +113,9 @@
           p.textContent = 'You: ' + text
           bodyEl.appendChild(p)
 
+          // ensure the new user message is visible immediately
+          bodyEl.scrollTop = bodyEl.scrollHeight
+
           input.value = ''
 
           try {
