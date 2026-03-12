@@ -9,7 +9,7 @@ Darkglass is a lightweight, embeddable chatbot designed for small colleges, prov
 
 ## Design
 
-The system is built on a minimalist "bare-metal" architecture, utilizing FastAPI and SQLite to ensure zero-configuration deployment on lightweight Linux VMs without the overhead of external databases.
+The system is built on a minimalist architecture, utilizing FastAPI and SQLite to provide zero-configuration deployment on lightweight Linux VMs without the overhead of external databases.
 
 ## Config
 
@@ -24,15 +24,9 @@ model = "gemini-3.1-flash-lite-preview"
 prompt = "You are a helpful agent for Acme College."
 ```
 
-## Demo
-
-1. Install the package
-2. Set configuration
-3. Run `make serve` and view http://localhost:8000/static/index.html
-
 ## Optional Google authentication
 
-An `[google]` section may be added when you wish to enable an administrative interface protected by Google accounts. Only the `client_id` value is required. A `[roles]` section may be added to list trusted addresses. When the `admins` list is non‑empty only the addresses contained therein will be allowed to access the dashboard; the previous `ADMIN_EMAILS` mechanism is overridden by the list.
+A `[google]` section may be added when you wish to enable an administrative interface protected by Google accounts. Only the `client_id` value is required. A `[roles]` section may be added to list trusted addresses. When the `admins` list is non‑empty only the addresses contained therein will be allowed to access the dashboard; the previous `ADMIN_EMAILS` mechanism is overridden by the list.
 
 ```toml
 [roles]
@@ -45,6 +39,12 @@ client_id = "your-google-client-id.apps.googleusercontent.com"
 # client_secret may be present but is no longer required
 client_secret = "your-secret"
 ```
+
+## Demo
+
+1. Install the package
+2. Set configuration
+3. Run `make serve` and view http://localhost:8000/static/index.html
 
 ## Add to arbitrary site via dev tools
 
