@@ -190,17 +190,19 @@ def call_model(message: str) -> str:
     >>> call_model("What is 1+1?")
     '2'
 
-    >>> call_model("What is the capital of France?")
+    >>> call_model("What is the capital of France? ")
     'Paris'
     """
 
     mocks = {
-        "What is 1+1?": "2",
-        "What is the capital of France?": "Paris",
+        "what is 1+1?": "2",
+        "what is the capital of france?": "Paris",
     }
 
-    if message in mocks:
-        return mocks[message]
+    try:
+        return mocks[message.lower().strip()]
+    except KeyError:
+        pass
 
     key = GEMINI_API_KEY
     if not key:
