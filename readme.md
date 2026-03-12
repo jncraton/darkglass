@@ -30,7 +30,9 @@ interface protected by Google accounts.  Only the `client_id` value is
 required.  The login flow takes place entirely in the browser: the static
 admin page renders a Google sign‑in button, obtains an ID token, and then
 sends that token as a bearer credential with any request to `/logs` or other
-protected APIs.  The server verifies the token against Google's
+protected APIs.  After signing in the button is replaced by a simple
+"Sign out" control that clears Google’s auto‑select state and reloads the
+page.  The server verifies the token against Google's
 ``/tokeninfo`` endpoint and checks the email address against the
 optional `ADMIN_EMAILS` whitelist.  The `client_secret` value is unused by the
 server but may be provided for completeness or testing purposes.

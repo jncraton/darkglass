@@ -6,6 +6,9 @@
   <body>
     <h1>Logs</h1>
     <div id="signin-container"></div>
+    <div id="signout-container" style="display: none">
+      <button id="signout">Sign out</button>
+    </div>
     <table border="1" id="logs" style="display: none">
       <thead>
         <tr>
@@ -49,6 +52,8 @@
       }
 
       function handleCredentialResponse(response) {
+        document.getElementById('signin-container').style.display = 'none'
+        document.getElementById('signout-container').style.display = ''
         renderLogs(response.credential)
       }
 
@@ -61,8 +66,11 @@
           document.getElementById('signin-container'),
           {theme: 'outline', size: 'large'}
         )
+        document.getElementById('signout').addEventListener('click', () => {
+          google.accounts.id.disableAutoSelect()
+          location.reload()
+        })
       }
     </script>
   </body>
 </html>
-}
