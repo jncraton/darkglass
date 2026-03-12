@@ -58,7 +58,10 @@ admins = ["alice@example.com", "bob@example.com"]
 <script src="https://darkglass.example.com/static/webchat.js"></script>
 ```
 
-## Add to arbitrary site via dev tools
+<details>
+<summary>Demo Snippet</summary>
+
+For quick demo purposes, the following snippet can be pasted into browser dev tools on any page to add a chat interface against a server running on localhost:
 
 ```js
 let darkglass = document.createElement('script')
@@ -66,3 +69,4 @@ darkglass.src = 'http://localhost:8000/static/webchat.js'
 darkglass.defer = true
 document.body.appendChild(darkglass)
 ```
+</details>
