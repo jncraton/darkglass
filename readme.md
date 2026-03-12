@@ -7,6 +7,8 @@
 
 Darkglass is a lightweight, embeddable chatbot designed for small colleges, providing prospective students with automated responses while logging interactions for administrative review.
 
+![Demo Video](demo.gif)
+
 ## Design
 
 The system is built on a minimalist architecture, utilizing FastAPI and SQLite to provide zero-configuration deployment on lightweight Linux VMs without the overhead of external databases.
