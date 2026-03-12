@@ -17,7 +17,7 @@ app = FastAPI()
 static_path = files("darkglass").joinpath("static")
 app.mount("/static", StaticFiles(directory=str(static_path)), name="static")
 
-DB_PATH = "data.db"
+DB_PATH = "darkglass.db"
 # admin email whitelist; empty list means any authenticated Google user
 # (a `[roles]` section in the config may replace this list entirely)
 ADMIN_EMAILS: list[str] = []

@@ -1,6 +1,6 @@
 __pycache__/
 *.pyc
-data.db
+darkglass.db
 .dep.css
 uv.lock
 darkglass.toml

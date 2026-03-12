@@ -17,7 +17,7 @@ darkglass.toml contains proprietary config information. It should never be read 
 
 ## Database
 
-Storage is always `data.db` in the working directory.
+Storage is always `darkglass.db` in the working directory.
 
 ## Testing
 
