@@ -5,7 +5,8 @@
   </head>
   <body>
     <h1>Logs</h1>
-    <table border="1" id="logs">
+    <div id="signin-container"></div>
+    <table border="1" id="logs" style="display: none">
       <thead>
         <tr>
           <th>Time</th>
@@ -15,25 +16,52 @@
       </thead>
       <tbody></tbody>
     </table>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
-      fetch('/logs')
-        .then((r) => r.json())
-        .then((data) => {
-          var tbody = document.querySelector('#logs tbody')
-          data.forEach(function (row) {
-            var tr = document.createElement('tr')
-            var d = new Date(row.ts * 1000).toLocaleString()
-            tr.innerHTML =
-              '<td>' +
-              d +
-              '</td><td>' +
-              row.user_message +
-              '</td><td>' +
-              row.assistant_message +
-              '</td>'
-            tbody.appendChild(tr)
-          })
+      function renderLogs(token) {
+        fetch('/logs', {
+          headers: {Authorization: 'Bearer ' + token},
         })
+          .then((r) => {
+            if (!r.ok) throw new Error('unauthorized')
+            return r.json()
+          })
+          .then((data) => {
+            document.getElementById('logs').style.display = ''
+            var tbody = document.querySelector('#logs tbody')
+            data.forEach(function (row) {
+              var tr = document.createElement('tr')
+              var d = new Date(row.ts * 1000).toLocaleString()
+              tr.innerHTML =
+                '<td>' +
+                d +
+                '</td><td>' +
+                row.user_message +
+                '</td><td>' +
+                row.assistant_message +
+                '</td>'
+              tbody.appendChild(tr)
+            })
+          })
+          .catch((e) => {
+            console.error('failed to load logs', e)
+          })
+      }
+
+      function handleCredentialResponse(response) {
+        renderLogs(response.credential)
+      }
+
+      window.onload = function () {
+        google.accounts.id.initialize({
+          client_id: '__GOOGLE_CLIENT_ID__',
+          callback: handleCredentialResponse,
+        })
+        google.accounts.id.renderButton(
+          document.getElementById('signin-container'),
+          {theme: 'outline', size: 'large'}
+        )
+      }
     </script>
   </body>
 </html>

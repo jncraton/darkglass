@@ -23,21 +23,23 @@ model = "gemini-3.1-flash-lite-preview"
 [context]
 prompt = "You are a helpful agent for Acme College."
 
-# Optional Google OAuth
+# Optional Google authentication
 
-A `[google]` section may be added when you wish to enable the admin
-login flow via Google accounts.  Only the `client_id` value is required for
-`/login` to function; `client_secret` is needed if you plan to exercise the
-callback endpoint during automated tests or to later revoke tokens, and a
-custom `redirect` URI can be supplied if the service is not running on the
-default `http://localhost:8000/auth/callback`.
+An `[google]` section may be added when you wish to enable an administrative
+interface protected by Google accounts.  Only the `client_id` value is
+required.  The login flow takes place entirely in the browser: the static
+admin page renders a Google sign‑in button, obtains an ID token, and then
+sends that token as a bearer credential with any request to `/logs` or other
+protected APIs.  The server verifies the token against Google's
+``/tokeninfo`` endpoint and checks the email address against the
+optional `ADMIN_EMAILS` whitelist.  The `client_secret` value is unused by the
+server but may be provided for completeness or testing purposes.
 
 ```toml
 [google]
 client_id = "your-google-client-id.apps.googleusercontent.com"
+# client_secret may be present but is no longer required
 client_secret = "your-secret"
-# optional override for deployed hosts
-redirect = "https://yourdomain.example.com/auth/callback"
 ````
 
 ````

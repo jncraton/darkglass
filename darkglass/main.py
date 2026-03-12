@@ -2,14 +2,12 @@ import os
 import sqlite3
 import json
 import time
-import hmac
-import hashlib
 import urllib.request
 import urllib.parse
 from typing import Optional
 
-from fastapi import FastAPI, Request, Response, HTTPException, Depends, Cookie
-from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
+from fastapi import FastAPI, HTTPException, Depends, Header
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -17,15 +15,11 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 DB_PATH = "data.db"
-sessions = {}
+# admin email whitelist; empty list means any authenticated Google user
 ADMIN_EMAILS: list[str] = []
-COOKIE_NAME = "admin_session"
-COOKIE_SECRET = "secret"
+# configuration populated from darkglass.toml
 GOOGLE_CLIENT_ID: Optional[str] = None
 GOOGLE_CLIENT_SECRET: Optional[str] = None
-
-# google oauth redirect fixed default
-OAUTH_REDIRECT = "http://localhost:8000/auth/callback"
 
 
 def load_config() -> dict:
@@ -55,15 +49,12 @@ SYSTEM_PROMPT = (
     or "Answer prospective student questions using the knowledge you have."
 )
 
-# google oauth configuration may be provided in a [google] section of the
+# google configuration may be provided in a [google] section of the
 # config file; values are optional and fall back to the hardcoded defaults
-# above.  the redirect URI is only required if the application is running
-# somewhere other than localhost:8000.
+# above.  only the client ID is required for the token‑based flow.
 google_section = _CONFIG.get("google", {}) or {}
 GOOGLE_CLIENT_ID = google_section.get("client_id")
 GOOGLE_CLIENT_SECRET = google_section.get("client_secret")
-# override default redirect if supplied in config
-OAUTH_REDIRECT = google_section.get("redirect") or OAUTH_REDIRECT
 
 
 def get_db():
@@ -92,30 +83,46 @@ def init_db():
 init_db()
 
 
-def sign_value(value: str) -> str:
-    sig = hmac.new(COOKIE_SECRET.encode(), value.encode(), hashlib.sha256).hexdigest()
-    return f"{value}|{sig}"
+def verify_google_token(id_token: str) -> Optional[str]:
+    """Verify an OAuth2 ID token with Google and return the user's email.
 
+    Google provides a simple endpoint for validating ID tokens:
+    https://oauth2.googleapis.com/tokeninfo?id_token=<token>
 
-def verify_signed(s: str) -> Optional[str]:
-    if "|" not in s:
+    The response includes the `email` and an `aud` field which should match
+    our configured client ID when available.  We make a blocking HTTP call
+    rather than introducing any additional dependencies.
+
+    Returns the email address if verification succeeds, otherwise ``None``.
+    """
+    try:
+        url = "https://oauth2.googleapis.com/tokeninfo?id_token=" + urllib.parse.quote(
+            id_token
+        )
+        resp = urllib.request.urlopen(url)
+        info = json.load(resp)
+        # if a client ID is configured, enforce audience match
+        aud = info.get("aud")
+        if GOOGLE_CLIENT_ID and aud != GOOGLE_CLIENT_ID:
+            return None
+        return info.get("email")
+    except Exception:
         return None
-    value, sig = s.rsplit("|", 1)
-    expected = hmac.new(
-        COOKIE_SECRET.encode(), value.encode(), hashlib.sha256
-    ).hexdigest()
-    if hmac.compare_digest(expected, sig):
-        return value
+
+
+def current_user(authorization: Optional[str] = Header(None)) -> Optional[str]:
+    """Extract the current user email from an Authorization header.
+
+    The frontend is expected to obtain a Google ID token and present it as a
+    bearer token.  We verify it on every request via
+    :func:`verify_google_token`.
+    """
+    if not authorization:
+        return None
+    if authorization.lower().startswith("bearer "):
+        token = authorization.split(" ", 1)[1]
+        return verify_google_token(token)
     return None
-
-
-def current_user(session: Optional[str] = Cookie(None)) -> Optional[str]:
-    if not session:
-        return None
-    token = verify_signed(session)
-    if not token:
-        return None
-    return sessions.get(token)
 
 
 def require_admin(user: Optional[str] = Depends(current_user)):
@@ -150,69 +157,22 @@ def get_logs(user: str = Depends(require_admin)):
 
 
 @app.get("/admin", response_class=HTMLResponse)
-def admin_page(user: str = Depends(require_admin)):
+def admin_page():
+    """Serve the admin dashboard HTML.
+
+    The page itself is public; authentication happens in JavaScript using a
+    Google-issued ID token.  A placeholder in the static file is replaced
+    with the configured client ID so the script can initialize the Google
+    sign‑in widget.
+    """
+    if not GOOGLE_CLIENT_ID:
+        return HTMLResponse("<h1>Google OAuth not configured</h1>")
     try:
         with open("static/admin.html") as f:
-            return f.read()
+            html = f.read()
+        return HTMLResponse(html.replace("__GOOGLE_CLIENT_ID__", GOOGLE_CLIENT_ID))
     except FileNotFoundError:
         return HTMLResponse("<h1>admin page not found</h1>")
-
-
-@app.get("/login")
-def login_redirect():
-    if not GOOGLE_CLIENT_ID:
-        raise HTTPException(status_code=500, detail="Google OAuth not configured")
-    base = "https://accounts.google.com/o/oauth2/v2/auth"
-    params = {
-        "client_id": GOOGLE_CLIENT_ID,
-        "response_type": "code",
-        "scope": "openid email",
-        "redirect_uri": OAUTH_REDIRECT,
-        "access_type": "offline",
-        "prompt": "consent",
-    }
-    url = f"{base}?{urllib.parse.urlencode(params)}"
-    return RedirectResponse(url)
-
-
-@app.get("/auth/callback")
-def auth_callback(code: Optional[str] = None, response: Response = None):
-    if not code:
-        raise HTTPException(status_code=400, detail="code is required")
-    data = urllib.parse.urlencode(
-        {
-            "code": code,
-            "client_id": GOOGLE_CLIENT_ID,
-            "client_secret": GOOGLE_CLIENT_SECRET,
-            "redirect_uri": OAUTH_REDIRECT,
-            "grant_type": "authorization_code",
-        }
-    ).encode()
-    req = urllib.request.Request(
-        "https://oauth2.googleapis.com/token",
-        data=data,
-        headers={"Content-Type": "application/x-www-form-urlencoded"},
-    )
-    resp = urllib.request.urlopen(req)
-    token_info = json.load(resp)
-    access_token = token_info.get("access_token")
-    if not access_token:
-        raise HTTPException(status_code=400, detail="failed to obtain access token")
-
-    req2 = urllib.request.Request(
-        f"https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token={urllib.parse.quote(access_token)}"
-    )
-    resp2 = urllib.request.urlopen(req2)
-    userinfo = json.load(resp2)
-    email = userinfo.get("email")
-    if not email:
-        raise HTTPException(status_code=400, detail="email not provided")
-    token = hashlib.sha256(os.urandom(32)).hexdigest()
-    sessions[token] = email
-    signed = sign_value(token)
-    response = RedirectResponse("/admin")
-    response.set_cookie(COOKIE_NAME, signed, httponly=True)
-    return response
 
 
 def call_model(message: str) -> str:
