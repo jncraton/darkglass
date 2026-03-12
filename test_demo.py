@@ -6,9 +6,7 @@ from pathlib import Path
 import darkglass
 
 # static assets are installed alongside the package
-file_url = (
-    (Path(darkglass.__file__).parent / "static" / "index.html").resolve().as_uri()
-)
+file_url = (Path(darkglass.__file__).parent / "static" / "demo.html").resolve().as_uri()
 
 
 @pytest.fixture
