@@ -14,7 +14,7 @@
       height: 32px;
       max-width: 80vw;
       font-family: sans-serif;
-      font-size: 14px;
+      font-size: 16px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.2);
       border: 1px solid #ccc;
       border-radius: 8px;
