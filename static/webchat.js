@@ -81,7 +81,7 @@
 
   const iframe = document.createElement('iframe')
   iframe.id = 'darkglass'
-  iframe.src = base + '/static/widget_frame.html'
+  iframe.src = base + '/static/webchat.html'
   // initial sizing; will be adjusted by messages from the frame
   iframe.style.position = 'fixed'
   iframe.style.bottom = '20px'

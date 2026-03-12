@@ -46,7 +46,7 @@ redirect = "https://yourdomain.example.com/auth/callback"
 
 ```js
 let darkglass = document.createElement('script')
-darkglass.src = 'http://localhost:8000/static/widget.js'
+darkglass.src = 'http://localhost:8000/static/webchat.js'
 darkglass.defer = true
 document.body.appendChild(darkglass)
 ````

@@ -3,7 +3,7 @@ import pytest
 from playwright.sync_api import Page, expect
 
 # load the isolated frame html directly rather than the landing page
-file_url = Path("static/widget_frame.html").resolve().as_uri()
+file_url = Path("static/webchat.html").resolve().as_uri()
 
 
 @pytest.fixture

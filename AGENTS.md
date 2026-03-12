@@ -6,7 +6,7 @@ interactions. The service calls a language model (defaulting to Google's
 Gemini API) via plain REST, stores exchanges in a local SQLite database,
 and uses a minimal session system with optional Google OAuth for admin login.
 The Python package lives under `darkglass/` with the main logic in
-`darkglass/main.py`. Static assets (`widget.js` and `admin.html`) are served
+`darkglass/main.py`. Static assets (`webchat.js` and `admin.html`) are served
 from the `static/` directory and the simple landing page is `index.html`.
 
 The project is pre-alpha. Backwards compatibility may be freely violated.
