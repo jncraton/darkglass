@@ -1,32 +1,101 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
     <title>Admin - Darkglass</title>
+    <style>
+      /* reuse the color palette and basic layout from the public index */
+      body {
+        margin: 0;
+        font-family: sans-serif;
+        color: #333;
+      }
+      header {
+        background: #000;
+        color: #fff;
+        padding: 1rem;
+        text-align: center;
+      }
+      .content {
+        padding: 2rem;
+        max-width: 800px;
+        margin: auto;
+      }
+      nav {
+        background: #f4f4f4;
+        padding: 1rem;
+        text-align: center;
+      }
+      nav a {
+        margin: 0 1rem;
+        text-decoration: none;
+        color: #d35400;
+        font-weight: bold;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      table th,
+      table td {
+        border: 1px solid #ddd;
+        padding: 0.5rem;
+      }
+      table th {
+        background: #f4f4f4;
+      }
+      #message {
+        margin: 1rem 0;
+        color: #d35400;
+        font-weight: bold;
+      }
+      button {
+        background: #000;
+        color: #fff;
+        border: none;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
-    <h1>Logs</h1>
-    <div id="signin-container"></div>
-    <div id="signout-container" style="display: none">
-      <button id="signout">Sign out</button>
-    </div>
-    <table border="1" id="logs" style="display: none">
-      <thead>
-        <tr>
-          <th>Time</th>
-          <th>User</th>
-          <th>Assistant</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+    <header>
+      <h1>Admin - Darkglass</h1>
+    </header>
+    <main class="content">
+      <div id="message"></div>
+      <div id="signin-container"></div>
+      <div id="signout-container" style="display: none">
+        <button id="signout">Sign out</button>
+      </div>
+      <table id="logs" style="display: none">
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>User</th>
+            <th>Assistant</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </main>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
+      function showMessage(text) {
+        var msg = document.getElementById('message')
+        msg.textContent = text
+      }
+
       function renderLogs(token) {
         fetch('/logs', {
-          headers: {Authorization: 'Bearer ' + token},
+          headers: { Authorization: 'Bearer ' + token },
         })
           .then((r) => {
-            if (!r.ok) throw new Error('unauthorized')
+            if (r.status === 401) {
+              showMessage('You are logged in but not authorized to view logs')
+              throw new Error('unauthorized')
+            }
+            if (!r.ok) throw new Error('failed to fetch logs')
             return r.json()
           })
           .then((data) => {
@@ -54,6 +123,7 @@
       function handleCredentialResponse(response) {
         document.getElementById('signin-container').style.display = 'none'
         document.getElementById('signout-container').style.display = ''
+        showMessage('')
         renderLogs(response.credential)
       }
 
@@ -64,7 +134,7 @@
         })
         google.accounts.id.renderButton(
           document.getElementById('signin-container'),
-          {theme: 'outline', size: 'large'}
+          { theme: 'outline', size: 'large' }
         )
         document.getElementById('signout').addEventListener('click', () => {
           google.accounts.id.disableAutoSelect()
