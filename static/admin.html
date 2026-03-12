@@ -88,7 +88,7 @@
 
       function renderLogs(token) {
         fetch('/logs', {
-          headers: { Authorization: 'Bearer ' + token },
+          headers: {Authorization: 'Bearer ' + token},
         })
           .then((r) => {
             if (r.status === 401) {
@@ -134,7 +134,7 @@
         })
         google.accounts.id.renderButton(
           document.getElementById('signin-container'),
-          { theme: 'outline', size: 'large' }
+          {theme: 'outline', size: 'large'}
         )
         document.getElementById('signout').addEventListener('click', () => {
           google.accounts.id.disableAutoSelect()
