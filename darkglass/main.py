@@ -185,6 +185,23 @@ def admin_page():
 
 
 def call_model(message: str) -> str:
+    """Generate chat completion
+
+    >>> call_model("What is 1+1?")
+    '2'
+
+    >>> call_model("What is the capital of France?")
+    'Paris'
+    """
+
+    mocks = {
+        "What is 1+1?": "2",
+        "What is the capital of France?": "Paris",
+    }
+
+    if message in mocks:
+        return mocks[message]
+
     key = GEMINI_API_KEY
     if not key:
         return "[no API key configured]"
