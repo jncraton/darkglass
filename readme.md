@@ -50,7 +50,7 @@ admins = ["alice@example.com", "bob@example.com"]
 
 1. `pip install darkglass`
 2. Set API keys, system prompt, and authorized users in `darkglass.toml`
-3. Run `make serve` to view and test demo application with chatbot at <http://localhost:8000/static/index.html>
+3. Run `darkglass` to start the production server in the current directory (use `--dev` to enable reload for development).  The frontend demo is available at <http://localhost:8000/static/index.html>
 4. Deploy to production
 
 ## Add to arbitrary site via dev tools
