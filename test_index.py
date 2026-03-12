@@ -3,8 +3,12 @@ from playwright.sync_api import Page, expect
 import pytest
 
 from pathlib import Path
+import darkglass
 
-file_url = Path("static/index.html").resolve().as_uri()
+# static assets are installed alongside the package
+file_url = (
+    (Path(darkglass.__file__).parent / "static" / "index.html").resolve().as_uri()
+)
 
 
 @pytest.fixture

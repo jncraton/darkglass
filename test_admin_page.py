@@ -1,9 +1,12 @@
 from pathlib import Path
 import pytest
 from playwright.sync_api import Page, expect
+import darkglass
 
-# load the static admin page directly
-file_url = Path("static/admin.html").resolve().as_uri()
+# load the static admin page directly; assets live next to the package
+file_url = (
+    (Path(darkglass.__file__).parent / "static" / "admin.html").resolve().as_uri()
+)
 
 
 @pytest.fixture

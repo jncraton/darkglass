@@ -1,9 +1,12 @@
 from pathlib import Path
 import pytest
 from playwright.sync_api import Page, expect
+import darkglass
 
 # load the isolated frame html directly rather than the landing page
-file_url = Path("static/webchat.html").resolve().as_uri()
+file_url = (
+    (Path(darkglass.__file__).parent / "static" / "webchat.html").resolve().as_uri()
+)
 
 
 @pytest.fixture

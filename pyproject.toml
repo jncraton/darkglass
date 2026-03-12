@@ -21,6 +21,12 @@ packages = ["darkglass"]
 exclude = [
   'darkglass.toml'
 ]
+# include the static assets in the package so they are available at runtime
+# when the package is installed.  hatchling will copy any files matching
+# these globs into the wheel.
+include = [
+  "darkglass/static/*"
+]
 
 [tool.hatch.envs.default]
 dependencies = [
