@@ -16,6 +16,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 DB_PATH = "data.db"
 # admin email whitelist; empty list means any authenticated Google user
+# (a `[roles]` section in the config may replace this list entirely)
 ADMIN_EMAILS: list[str] = []
 # configuration populated from darkglass.toml
 GOOGLE_CLIENT_ID: Optional[str] = None
@@ -55,6 +56,11 @@ SYSTEM_PROMPT = (
 google_section = _CONFIG.get("google", {}) or {}
 GOOGLE_CLIENT_ID = google_section.get("client_id")
 GOOGLE_CLIENT_SECRET = google_section.get("client_secret")
+
+# roles section may contain an `admins` list which overrides the default
+# behaviour described above.  if present it replaces `ADMIN_EMAILS`.
+roles_section = _CONFIG.get("roles", {}) or {}
+ADMIN_EMAILS = roles_section.get("admins", []) or ADMIN_EMAILS
 
 
 def get_db():

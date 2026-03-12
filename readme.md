@@ -27,15 +27,16 @@ prompt = "You are a helpful agent for Acme College."
 
 An `[google]` section may be added when you wish to enable an administrative
 interface protected by Google accounts.  Only the `client_id` value is
-required.  The login flow takes place entirely in the browser: the static
-admin page renders a Google sign‑in button, obtains an ID token, and then
-sends that token as a bearer credential with any request to `/logs` or other
-protected APIs.  After signing in the button is replaced by a simple
-"Sign out" control that clears Google’s auto‑select state and reloads the
-page.  The server verifies the token against Google's
-``/tokeninfo`` endpoint and checks the email address against the
-optional `ADMIN_EMAILS` whitelist.  The `client_secret` value is unused by the
-server but may be provided for completeness or testing purposes.
+required.  A `[roles]` section may be added to list trusted addresses.  When the
+`admins` list is non‑empty only the addresses contained therein will be
+allowed to access the dashboard; the previous `ADMIN_EMAILS` mechanism is
+overridden by the list.
+
+```toml
+[roles]
+admins = ["alice@example.com", "bob@example.com"]
+```
+
 
 ```toml
 [google]
