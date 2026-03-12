@@ -23,7 +23,13 @@ model = "gemini-3.1-flash-lite-preview"
 [context]
 prompt = "You are a helpful agent for Acme College."
 
-# Optional Google authentication
+## Demo
+
+1. Install the package
+2. Set configuration
+3. Run `make serve` and view http://localhost:8000/static/index.html
+
+## Optional Google authentication
 
 An `[google]` section may be added when you wish to enable an administrative
 interface protected by Google accounts.  Only the `client_id` value is
