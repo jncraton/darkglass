@@ -15,7 +15,7 @@ The system is built on a minimalist "bare-metal" architecture, utilizing FastAPI
 
 A `[gemini]` section supplies the `api_key` used for the model along with an optional `model` entry; the latter defaults to `gemini-3.1-flash-lite-preview`. Example:
 
-```toml
+````toml
 [gemini]
 api_key = "mysecretkey"
 model = "gemini-3.1-flash-lite-preview"
@@ -38,8 +38,9 @@ client_id = "your-google-client-id.apps.googleusercontent.com"
 client_secret = "your-secret"
 # optional override for deployed hosts
 redirect = "https://yourdomain.example.com/auth/callback"
-```
-```
+````
+
+````
 
 ## Add to arbitrary site via dev tools:
 
@@ -48,4 +49,4 @@ let darkglass = document.createElement('script')
 darkglass.src = 'http://localhost:8000/static/widget.js'
 darkglass.defer = true
 document.body.appendChild(darkglass)
-```
+````

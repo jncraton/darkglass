@@ -29,6 +29,7 @@ def test_chat_no_message():
     mod, client = load_app_with_config()
     r = client.post("/chat", json={})
 
+
 def test_login_not_configured():
     mod, client = load_app_with_config()
     r = client.get("/login")
