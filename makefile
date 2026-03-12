@@ -19,4 +19,4 @@ serve:
 	uv run --python 3.11 --with fastapi[standard]==0.135.1 fastapi dev
 
 clean:
-	rm -rf .pytest_cache __pycache__ dep.css .venv
+	rm -rf .pytest_cache __pycache__ dep.css .venv tests/__pycache__
