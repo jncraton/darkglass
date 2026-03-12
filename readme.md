@@ -7,6 +7,8 @@
 
 Darkglass is a lightweight, embeddable chatbot designed for small colleges, providing prospective students with automated responses while logging interactions for administrative review.
 
+## Demo
+
 ![Demo Video](demo.gif)
 
 ## Design
@@ -44,11 +46,12 @@ To restrict dashboard access to specific addresses, add a `[roles]` section with
 admins = ["alice@example.com", "bob@example.com"]
 ```
 
-## Demo
+## Usage
 
-1. Install the package
-2. Set configuration
-3. Run `make serve` and view http://localhost:8000/static/index.html
+1. `pip install darkglass`
+2. Set API keys, system prompt, and authorized users in `darkglass.toml`
+3. Run `make serve` to view and test demo application with chatbot at <http://localhost:8000/static/index.html>
+4. Deploy to production
 
 ## Add to arbitrary site via dev tools
 
