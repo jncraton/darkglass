@@ -4,6 +4,7 @@ import json
 import time
 import urllib.request
 import urllib.parse
+from importlib.resources import files
 from typing import Optional
 
 from fastapi import FastAPI, HTTPException, Depends, Header
@@ -13,14 +14,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-# When the package is installed, the static directory will live next to
-# this module.  Use an absolute path rather than relying on the current
-# working directory so the server works regardless of where it is started.
-from pathlib import Path
-
-_package_dir = Path(__file__).parent
-_static_dir = _package_dir / "static"
-app.mount("/static", StaticFiles(directory=str(_static_dir)), name="static")
+static_path = files("darkglass").joinpath("static")
+app.mount("/static", StaticFiles(directory=str(static_path)), name="static")
 
 DB_PATH = "data.db"
 # admin email whitelist; empty list means any authenticated Google user
