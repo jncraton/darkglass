@@ -11,33 +11,35 @@ Darkglass is a lightweight, embeddable chatbot designed for small colleges, prov
 
 The system is built on a minimalist architecture, utilizing FastAPI and SQLite to provide zero-configuration deployment on lightweight Linux VMs without the overhead of external databases.
 
-## Config
+## Configuration
 
-A `[gemini]` section supplies the `api_key` used for the model along with an optional `model` entry; the latter defaults to `gemini-3.1-flash-lite-preview`. Example:
+Add a `[gemini]` section with your API key and optional model (defaults to `gemini-3.1-flash-lite-preview`):
 
 ```toml
 [gemini]
 api_key = "mysecretkey"
 model = "gemini-3.1-flash-lite-preview"
+```
 
+You can also include a `[context]` section to provide a default prompt for the agent:
+
+```toml
 [context]
 prompt = "You are a helpful agent for Acme College."
 ```
 
-## Optional Google authentication
-
-A `[google]` section may be added when you wish to enable an administrative interface protected by Google accounts. Only the `client_id` value is required. A `[roles]` section may be added to list trusted addresses. When the `admins` list is non‑empty only the addresses contained therein will be allowed to access the dashboard; the previous `ADMIN_EMAILS` mechanism is overridden by the list.
-
-```toml
-[roles]
-admins = ["alice@example.com", "bob@example.com"]
-```
+To enable a secure administrative dashboard, add a `[google]` section with a `client_id` to use for authentication.
 
 ```toml
 [google]
 client_id = "your-google-client-id.apps.googleusercontent.com"
-# client_secret may be present but is no longer required
-client_secret = "your-secret"
+```
+
+To restrict dashboard access to specific addresses, add a `[roles]` section with an `admins` list. When `admins` is non-empty, only addresses listed will be allowed access.
+
+```toml
+[roles]
+admins = ["alice@example.com", "bob@example.com"]
 ```
 
 ## Demo
