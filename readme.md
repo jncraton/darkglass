@@ -69,4 +69,12 @@ darkglass.src = 'http://localhost:8000/static/webchat.js'
 darkglass.defer = true
 document.body.appendChild(darkglass)
 ```
+
 </details>
+
+### Mock Data
+
+For demonstration purposes, the interface will correctly respond to the following queries even with no LLM API keys configured:
+
+- "What is 1+1?"
+- "What is the capital of France?"
