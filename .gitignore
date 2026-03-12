@@ -4,3 +4,4 @@ data.db
 .dep.css
 uv.lock
 darkglass.toml
+.venv
