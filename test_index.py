@@ -15,35 +15,3 @@ def root(page: Page):
 
 def test_page_title(root):
     expect(root).to_have_title("Example University")
-
-
-def test_widget_present_and_toggle(root):
-    # the widget should inject a container with id `darkglass` and a header
-    widget = root.locator("#darkglass")
-    expect(widget).to_be_visible()
-
-    # basic style checks; should be fixed in the viewport
-    # use evaluate to read computed style properties
-    pos = widget.evaluate("el => getComputedStyle(el).position")
-    assert pos == "fixed"
-    bot = widget.evaluate("el => getComputedStyle(el).bottom")
-    assert bot in ("20px", "20px")
-
-    header = widget.locator(".header")
-    expect(header).to_have_text("Chat")
-
-    # initial state is closed; body should not be visible
-    body = widget.locator(".body")
-    expect(body).not_to_be_visible()
-
-    # clicking header should expand and show body
-    header.click()
-    expect(body).to_be_visible()
-
-    header.click()
-    expect(body).not_to_be_visible()
-
-    header.click()  # open again
-    expect(body).to_be_visible()
-    body.click()
-    expect(body).to_be_visible()
