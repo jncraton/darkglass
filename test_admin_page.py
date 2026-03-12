@@ -13,6 +13,6 @@ def root(page: Page):
 
 
 def test_page_title_and_header(root):
-    expect(root).to_have_title("Admin - Darkglass")
+    expect(root).to_have_title("Chat Log")
     header = root.locator("header h1")
-    expect(header).to_have_text("Admin - Darkglass")
+    expect(header).to_have_text("Chat Log")
