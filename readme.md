@@ -51,8 +51,8 @@ admins = ["alice@example.com", "bob@example.com"]
 ## Add to arbitrary site via dev tools
 
 ```js
-let darkglass = document.createElement('script');
-darkglass.src = 'http://localhost:8000/static/webchat.js';
-darkglass.defer = true;
-document.body.appendChild(darkglass);
+let darkglass = document.createElement('script')
+darkglass.src = 'http://localhost:8000/static/webchat.js'
+darkglass.defer = true
+document.body.appendChild(darkglass)
 ```
