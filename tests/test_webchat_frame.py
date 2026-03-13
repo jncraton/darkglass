@@ -3,7 +3,6 @@ import pytest
 from playwright.sync_api import Page, expect
 import darkglass
 
-# load the isolated frame html directly rather than the landing page
 file_url = (
     (Path(darkglass.__file__).parent / "static" / "webchat.html").resolve().as_uri()
 )
@@ -16,12 +15,9 @@ def root(page: Page):
 
 
 def test_widget_present_and_toggle(root):
-    # the frame contains the widget container by default
     widget = root.locator("#darkglass")
     expect(widget).to_be_visible()
 
-    # initial state should be "closed" with the class applied and a small
-    # height; it is positioned relative within the frame rather than fixed.
     assert widget.evaluate("el => el.classList.contains('closed')")
     pos = widget.evaluate("el => getComputedStyle(el).position")
     assert pos == "relative"
@@ -34,7 +30,6 @@ def test_widget_present_and_toggle(root):
     body = widget.locator(".body")
     expect(body).not_to_be_visible()
 
-    # open and close by clicking the header
     header.click()
     expect(body).to_be_visible()
     assert not widget.evaluate("el => el.classList.contains('closed')")
@@ -43,7 +38,6 @@ def test_widget_present_and_toggle(root):
     expect(body).not_to_be_visible()
     assert widget.evaluate("el => el.classList.contains('closed')")
 
-    # clicking inside the body once open should not collapse it
     header.click()
     expect(body).to_be_visible()
     body.click()

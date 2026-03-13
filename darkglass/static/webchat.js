@@ -1,5 +1,4 @@
 ;(() => {
-  // inject markdown parser
   const markedScript = document.createElement('script')
   markedScript.src = 'https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js'
   markedScript.defer = true
@@ -64,10 +63,6 @@
   style.textContent = styles
   document.head.appendChild(style)
 
-  // replace the previous standalone widget with an iframe. the host page
-  // may be a different origin, so all network traffic should go through the
-  // origin that served this script. we compute that once and then load our
-  // real UI inside a same-origin HTML page under /static.
   const base = (() => {
     let script = document.currentScript
     if (!script) {
@@ -83,7 +78,6 @@
   const iframe = document.createElement('iframe')
   iframe.id = 'darkglass'
   iframe.src = base + '/static/webchat.html'
-  // initial sizing; will be adjusted by messages from the frame
   iframe.style.position = 'fixed'
   iframe.style.bottom = '20px'
   iframe.style.right = '20px'
@@ -99,7 +93,5 @@
       iframe.style.height = e.data.height + 'px'
     }
   })
-  // append iframe to document; sizing will be controlled by messages from within
-  // the frame itself.
   document.body.appendChild(iframe)
 })()

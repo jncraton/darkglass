@@ -18,10 +18,7 @@ static_path = files("darkglass").joinpath("static")
 app.mount("/static", StaticFiles(directory=str(static_path)), name="static")
 
 DB_PATH = "darkglass.db"
-# admin email whitelist; empty list means any authenticated Google user
-# (a `[roles]` section in the config may replace this list entirely)
 ADMIN_EMAILS: list[str] = []
-# configuration populated from darkglass.toml
 GOOGLE_CLIENT_ID: Optional[str] = None
 GOOGLE_CLIENT_SECRET: Optional[str] = None
 
@@ -53,15 +50,10 @@ SYSTEM_PROMPT = (
     or "Answer prospective student questions using the knowledge you have."
 )
 
-# google configuration may be provided in a [google] section of the
-# config file; values are optional and fall back to the hardcoded defaults
-# above.  only the client ID is required for the token‑based flow.
 google_section = _CONFIG.get("google", {}) or {}
 GOOGLE_CLIENT_ID = google_section.get("client_id")
 GOOGLE_CLIENT_SECRET = google_section.get("client_secret")
 
-# roles section may contain an `admins` list which overrides the default
-# behaviour described above.  if present it replaces `ADMIN_EMAILS`.
 roles_section = _CONFIG.get("roles", {}) or {}
 ADMIN_EMAILS = roles_section.get("admins", []) or ADMIN_EMAILS
 
@@ -110,7 +102,6 @@ def verify_google_token(id_token: str) -> Optional[str]:
         )
         resp = urllib.request.urlopen(url)
         info = json.load(resp)
-        # if a client ID is configured, enforce audience match
         aud = info.get("aud")
         if GOOGLE_CLIENT_ID and aud != GOOGLE_CLIENT_ID:
             return None
