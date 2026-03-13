@@ -6,6 +6,7 @@ lint:
 	
 format:
 	npx prettier@3.6.2 --write .
+	uvx uncomment .
 	uvx black@24.1.0 .
 
 %.min.js: %.js
